@@ -1,0 +1,41 @@
+html, body, div {
+  margin: 0;
+  padding: 1px;
+}
+
+body{
+  margin:0 10px;
+}
+
+#container img {
+  width: auto;
+  height: auto;
+}
+
+#content {
+  position: relative;
+}
+
+li {
+  list-style: none;
+}
+
+.pre-big {
+  padding-bottom: 8px;
+}
+
+.title {
+  font-size: 110%;
+}
+
+.author {
+  color: #fa98bf;
+  font-style: italic;
+  font-size: 70%;
+}
+
+.date {
+  color: green;
+  text-decoration: underline;
+  font-size: 50%;
+}
