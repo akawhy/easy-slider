@@ -1,3 +1,11 @@
-.red {
+.key {
   color: red;
+}
+
+.item {
+  color: blue;
+}
+
+.info {
+  color: green;
 }

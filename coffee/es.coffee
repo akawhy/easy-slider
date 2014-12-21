@@ -9,7 +9,7 @@ render_inline_makeup = (line) ->
               replace(/>/g, "&gt;").
               replace(/"/g, "&quot;").
               replace(/'/g, "&apos;").
-              replace(/{{(\w+)\|(.+?)}}/, "<span class=\"$1\">$2</span>")
+              replace(/{{(\w+)\|(.+?)}}/g, "<span class=\"$1\">$2</span>")
 
 T_COMMON = 0
 T_CODE   = 1
@@ -74,11 +74,9 @@ class SimpleSlider
     console.log raw_content
 
     ## split the raw_content into each slide
-    #raw_slides = (_c.trim() for _c in raw_content.split /^-----\s*$/m)
     raw_slides = raw_content.split /^-----\s*$/m
 
     slides = []
-
     for rs in raw_slides
       continue if rs.match /^\s*$/    # skip empty slide
 
@@ -110,13 +108,7 @@ class SimpleSlider
       tbcb.render slide
       return slide.rendered = true
 
-    #console.log raw_text
-    #lines = raw_text.replace(/^\s+/, '').           # trim space head
-    #                 replace(/\s+$/, '').           # trim space tail
-    #                 replace(/(\r\n|\r)/g, "\n").   # enter with \n
-    #                 split("\n")                    # split to line
     lines  = raw_text.split("\n")
-    #console.log lines
 
     append_ul = (nodes, ul) ->
       nodes.push($('<div></div>').append ul)
@@ -143,7 +135,6 @@ class SimpleSlider
         li = $("<li>" + rendered_line + "</li>")
         ul.append li
 
-        #slide.html_nodes.push li
       else
         ## status changed
         if ul?
@@ -167,13 +158,14 @@ class SimpleSlider
     fontsize = if size < 1 then 1 else size
     fontsize = fontsize + 'px'
 
-    #console.log "set fontsize: #{fontsize}"
-
     @content.css('font-size', fontsize)
 
 
+  #################################
   ## resize the container        ##
+  ## most important function     ##
   ## too hard for me, so magic   ##
+  #################################
   resize: () ->
     if @content == null
       console.log('@content is null')
@@ -185,8 +177,6 @@ class SimpleSlider
     console.log(@content.height())
 
     if @content.height()
-      #container_h = @container.height()
-      #container_w = @container.width()
       container_h = getHeight()
       @container.height(container_h)
       container_w = getWidth()
@@ -203,6 +193,7 @@ class SimpleSlider
 
       @set_fontsize new_fs
 
+      ## clean container css, for resize
       @container.css('width', '')
       @content.css('float', '')
 
@@ -219,6 +210,7 @@ class SimpleSlider
       diff = container_h - content_h
       if diff > 20
         @content.css('top', diff / 2.8 + 'px')
+
 
   show: (page_number) ->
     slide = @slides[page_number]
@@ -251,6 +243,7 @@ class SimpleSlider
       @show @current_page_number
 
 
+## here we go~
 $ ->
   ss = new SimpleSlider
 
