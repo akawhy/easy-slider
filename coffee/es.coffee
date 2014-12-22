@@ -223,10 +223,12 @@ class SimpleSlider
 
       diff = container_h - content_h
       if diff > 20
-        @content.css('top', diff / 2.8 + 'px')
+        @content.css('top', diff / 3 + 'px')
+      else if @content.css('top') isnt "0px"
+        @content.css('top', '0px')
 
 
-  show: (page_number) ->
+  show: (page_number, cb) ->
     slide = @slides[page_number]
 
     @content.empty()
@@ -245,6 +247,9 @@ class SimpleSlider
     if tbcb
       tbcb.post_render()
 
+    if cb
+      setTimeout(cb, 100)
+
   ## key action related
   next: ->
     unless @current_page_number + 1 > @max_page_number
@@ -256,6 +261,29 @@ class SimpleSlider
       @current_page_number--
       @show @current_page_number
 
+  print_pdf: ->
+    div     = $('<div></div>')
+    content = @content
+    h       = @container.height
+    i       = @slides.length - 1
+
+    step = =>
+      console.log "print pdf #{@current_page_number}"
+      div.prepend(content.clone().attr("_id", @current_page_number).css({'height': h, 'page-break-after': 'always'}))
+
+      if @current_page_number > 0
+        @current_page_number -= 1
+        setTimeout(proc, 0)
+      else
+        div.prependTo(document.body)
+        window.print()
+
+    proc = =>
+      console.log "begin to print pdf"
+      @show(@current_page_number, step)
+
+    @current_page_number = i
+    proc()
 
 ## here we go~
 $ ->
@@ -269,6 +297,10 @@ $ ->
         ss.last()
       when 39                 ## right
         ss.next()
+      when 50                 ## @
+        ss.print_pdf()
+      else
+        console.log "unknow key #{key}"
 
 #
 #   - Licence

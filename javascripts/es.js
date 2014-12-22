@@ -201,12 +201,14 @@ SimpleSlider = (function() {
       console.log("container_h " + container_h);
       diff = container_h - content_h;
       if (diff > 20) {
-        return this.content.css('top', diff / 2.8 + 'px');
+        return this.content.css('top', diff / 3 + 'px');
+      } else if (this.content.css('top') !== "0px") {
+        return this.content.css('top', '0px');
       }
     }
   };
 
-  SimpleSlider.prototype.show = function(page_number) {
+  SimpleSlider.prototype.show = function(page_number, cb) {
     var container_h, slide, tbcb;
     slide = this.slides[page_number];
     this.content.empty();
@@ -220,7 +222,10 @@ SimpleSlider = (function() {
     this.resize();
     tbcb = type_cb[slide.type];
     if (tbcb) {
-      return tbcb.post_render();
+      tbcb.post_render();
+    }
+    if (cb) {
+      return setTimeout(cb, 100);
     }
   };
 
@@ -238,6 +243,38 @@ SimpleSlider = (function() {
     }
   };
 
+  SimpleSlider.prototype.print_pdf = function() {
+    var content, div, h, i, proc, step;
+    div = $('<div></div>');
+    content = this.content;
+    h = this.container.height;
+    i = this.slides.length - 1;
+    step = (function(_this) {
+      return function() {
+        console.log("print pdf " + _this.current_page_number);
+        div.prepend(content.clone().attr("_id", _this.current_page_number).css({
+          'height': h,
+          'page-break-after': 'always'
+        }));
+        if (_this.current_page_number > 0) {
+          _this.current_page_number -= 1;
+          return setTimeout(proc, 0);
+        } else {
+          div.prependTo(document.body);
+          return window.print();
+        }
+      };
+    })(this);
+    proc = (function(_this) {
+      return function() {
+        console.log("begin to print pdf");
+        return _this.show(_this.current_page_number, step);
+      };
+    })(this);
+    this.current_page_number = i;
+    return proc();
+  };
+
   return SimpleSlider;
 
 })();
@@ -253,6 +290,10 @@ $(function() {
         return ss.last();
       case 39:
         return ss.next();
+      case 50:
+        return ss.print_pdf();
+      default:
+        return console.log("unknow key " + key);
     }
   });
 });

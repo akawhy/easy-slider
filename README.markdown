@@ -12,6 +12,8 @@ just copy the sample.html, change the content, then open with a browser.
 
 ```
 
+## some comment
+
 this is a special {{css_class_name|some text}}
 
   list start with some space
@@ -29,4 +31,14 @@ use 5.010;
 my $name = q{EasySilder};
 print "Hello, $name";
 
+-----
+=image
+
+path/of/one/image.jpg width height
+
 ```
+
+## Operation
+
+1. Use `right arrow` key to go to next page, and `left arrow` key to go to last page.
+2. Use `@` to export the slide as pdf
