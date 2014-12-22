@@ -39,3 +39,13 @@ li {
   text-decoration: underline;
   font-size: 50%;
 }
+
+.subtitle {
+  font-size: 60%;
+  font-style: italic;
+}
+
+.special {
+  color: #808080;
+  font-style: italic;
+}

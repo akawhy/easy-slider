@@ -45,15 +45,25 @@ type_cb = [
     }
   }, {
     render: function(slide) {
-      var div, img, params;
+      var div, height, img, params, width;
       div = $('<div></div>');
       div.css('text-align', 'center');
       params = slide.raw_text.match(/(\S+)\s+(\d+)\s+(\d+)/);
       if (params) {
         img = $('<img></img>');
         img.attr('src', params[1]);
-        img.width(params[2]);
-        img.height(params[3]);
+        width = parseInt(params[2], 10);
+        height = parseInt(params[3], 10);
+        if (width !== 0) {
+          img.width(width);
+        } else {
+          img.width('90%');
+        }
+        if (height !== 0) {
+          img.height(height);
+        } else {
+          img.height("auto");
+        }
         div.append(img);
         return slide.html_nodes.push(div);
       } else {
@@ -118,6 +128,9 @@ SimpleSlider = (function() {
     };
     ul = null;
     while ((line = lines.shift()) != null) {
+      if (line.match(/^#/)) {
+        continue;
+      }
       rendered_line = render_inline_makeup(line);
       console.log(rendered_line);
       if (rendered_line.match(/^\s*$/)) {

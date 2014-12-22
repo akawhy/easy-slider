@@ -42,8 +42,19 @@ type_cb = [
       if params
         img = $('<img></img>')
         img.attr('src', params[1])
-        img.width(params[2])
-        img.height(params[3])
+
+        width  = parseInt(params[2], 10)
+        height = parseInt(params[3], 10)
+
+        if width isnt 0
+          img.width(width)
+        else
+          img.width('90%')
+
+        if height isnt 0
+          img.height(height)
+        else
+          img.height("auto")
 
         div.append img
         
@@ -115,6 +126,9 @@ class SimpleSlider
 
     ul  = null
     while (line = lines.shift())?
+      ## skip comment
+      continue if line.match /^#/
+
       rendered_line = render_inline_makeup line
       console.log rendered_line
 

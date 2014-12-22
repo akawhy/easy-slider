@@ -1,3 +1,4 @@
 node_modules/
 posts/*
 !posts/sample.html
+img/*
